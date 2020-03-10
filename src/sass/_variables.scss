@@ -1,0 +1,1479 @@
+// Variables
+
+// Color overrides
+
+// Set a custom color
+$orange: #f4623a !default;
+$brown: #5c4d42 !default;
+
+
+// Breakpoint viewport sizes and media queries.
+//
+// Breakpoints are defined as a map of (name: minimum width), order from small to large:
+//
+//    (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px)
+//
+// The map defined in the `$grid-breakpoints` global variable is used as the `$breakpoints` argument by default.
+
+// Name of the next breakpoint, or null for the last breakpoint.
+//
+//    >> breakpoint-next(sm)
+//    md
+//    >> breakpoint-next(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+//    md
+//    >> breakpoint-next(sm, $breakpoint-names: (xs sm md lg xl))
+//    md
+@function breakpoint-next($name, $breakpoints: $grid-breakpoints, $breakpoint-names: map-keys($breakpoints)) {
+    $n: index($breakpoint-names, $name);
+    @return if($n != null and $n < length($breakpoint-names), nth($breakpoint-names, $n + 1), null);
+  }
+  
+  // Minimum breakpoint width. Null for the smallest (first) breakpoint.
+  //
+  //    >> breakpoint-min(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+  //    576px
+  @function breakpoint-min($name, $breakpoints: $grid-breakpoints) {
+    $min: map-get($breakpoints, $name);
+    @return if($min != 0, $min, null);
+  }
+  
+  // Maximum breakpoint width. Null for the largest (last) breakpoint.
+  // The maximum value is calculated as the minimum of the next one less 0.02px
+  // to work around the limitations of `min-` and `max-` prefixes and viewports with fractional widths.
+  // See https://www.w3.org/TR/mediaqueries-4/#mq-min-max
+  // Uses 0.02px rather than 0.01px to work around a current rounding bug in Safari.
+  // See https://bugs.webkit.org/show_bug.cgi?id=178261
+  //
+  //    >> breakpoint-max(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+  //    767.98px
+  @function breakpoint-max($name, $breakpoints: $grid-breakpoints) {
+    $next: breakpoint-next($name, $breakpoints);
+    @return if($next, breakpoint-min($next, $breakpoints) - .02, null);
+  }
+  
+  // Returns a blank string if smallest breakpoint, otherwise returns the name with a dash in front.
+  // Useful for making responsive utilities.
+  //
+  //    >> breakpoint-infix(xs, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+  //    ""  (Returns a blank string)
+  //    >> breakpoint-infix(sm, (xs: 0, sm: 576px, md: 768px, lg: 992px, xl: 1200px))
+  //    "-sm"
+  @function breakpoint-infix($name, $breakpoints: $grid-breakpoints) {
+    @return if(breakpoint-min($name, $breakpoints) == null, "", "-#{$name}");
+  }
+  
+  // Media of at least the minimum breakpoint width. No query for the smallest breakpoint.
+  // Makes the @content apply to the given breakpoint and wider.
+  @mixin media-breakpoint-up($name, $breakpoints: $grid-breakpoints) {
+    $min: breakpoint-min($name, $breakpoints);
+    @if $min {
+      @media (min-width: $min) {
+        @content;
+      }
+    } @else {
+      @content;
+    }
+  }
+  
+  // Media of at most the maximum breakpoint width. No query for the largest breakpoint.
+  // Makes the @content apply to the given breakpoint and narrower.
+  @mixin media-breakpoint-down($name, $breakpoints: $grid-breakpoints) {
+    $max: breakpoint-max($name, $breakpoints);
+    @if $max {
+      @media (max-width: $max) {
+        @content;
+      }
+    } @else {
+      @content;
+    }
+  }
+  
+  // Media that spans multiple breakpoint widths.
+  // Makes the @content apply between the min and max breakpoints
+  @mixin media-breakpoint-between($lower, $upper, $breakpoints: $grid-breakpoints) {
+    $min: breakpoint-min($lower, $breakpoints);
+    $max: breakpoint-max($upper, $breakpoints);
+  
+    @if $min != null and $max != null {
+      @media (min-width: $min) and (max-width: $max) {
+        @content;
+      }
+    } @else if $max == null {
+      @include media-breakpoint-up($lower, $breakpoints) {
+        @content;
+      }
+    } @else if $min == null {
+      @include media-breakpoint-down($upper, $breakpoints) {
+        @content;
+      }
+    }
+  }
+  
+  // Media between the breakpoint's minimum and maximum widths.
+  // No minimum for the smallest breakpoint, and no maximum for the largest one.
+  // Makes the @content apply only to the given breakpoint, not viewports any wider or narrower.
+  @mixin media-breakpoint-only($name, $breakpoints: $grid-breakpoints) {
+    $min: breakpoint-min($name, $breakpoints);
+    $max: breakpoint-max($name, $breakpoints);
+  
+    @if $min != null and $max != null {
+      @media (min-width: $min) and (max-width: $max) {
+        @content;
+      }
+    } @else if $max == null {
+      @include media-breakpoint-up($name, $breakpoints) {
+        @content;
+      }
+    } @else if $min == null {
+      @include media-breakpoint-down($name, $breakpoints) {
+        @content;
+      }
+    }
+  }
+  
+
+
+
+// Set primary color to orange
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px
+) !default;
+$primary: $orange !default;
+
+// Font overrides
+$font-family-sans-serif: "Merriweather Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'Noto Color Emoji' !default;
+
+$font-family-serif: "Merriweather", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'Noto Color Emoji' !default;
+
+$font-family-base: "Nunito Sans", Arial, sans-serif;
+
+$headings-font-family: $font-family-sans-serif !default;
+
+// Custom variables
+$navbar-height: 72px;
+
+
+
+$font-primary: 'Nunito Sans',Arial, sans-serif;
+
+$white: #fff;
+$black: #000000;
+$darken: #232931;
+
+$primary: #ffb400;
+$secondary: #6b76ff;
+
+
+
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+     -moz-border-radius: $radius;
+      -ms-border-radius: $radius;
+          border-radius: $radius;
+}
+
+@mixin transition($transition) {
+    -moz-transition:    all $transition ease;
+    -o-transition:      all $transition ease;
+    -webkit-transition: all $transition ease;
+    -ms-transition: 		all $transition ease;
+    transition:         all $transition ease;
+}
+
+html {
+	// overflow-x: hidden;
+}
+body {
+	font-family: $font-primary;
+	background: $white;
+	font-size: 16px;
+	line-height: 1.8;
+	font-weight: 600;
+	color: lighten($black,60%);
+	&.menu-show {
+		overflow: hidden;
+		position: fixed;
+		height: 100%;
+		width: 100%;
+	}
+}
+a {
+	transition: .3s all ease;
+	color: $primary;
+	&:hover, &:focus {
+		text-decoration: none;
+		color: $primary;
+		outline: none !important;
+	}
+}
+
+
+.text-primary {
+	color: $primary!important;
+}
+
+
+.ftco-navbar-light {
+	background: transparent !important;
+	position: absolute;
+	top: 20px;
+	left: 0;
+	right: 0;
+	z-index: 3;
+	padding: 0;
+	@include media-breakpoint-down(md) {
+		background: $black!important;
+		position: relative;
+		top: 0;
+		padding: 10px 15px;
+	}
+	&.ftco-navbar-light-2{
+		position: relative;
+		top: 0;
+		.navbar-nav {
+			> .nav-item {
+				> .nav-link {
+					font-size: 14px;
+					padding-top: 1.8rem;
+					padding-bottom: 1.8rem;
+					padding-left: 20px;
+					padding-right: 20px;
+					font-weight: 400;
+					color: $black;
+					&:hover {
+						color: $primary;
+					}
+					opacity: 1!important;
+					@include media-breakpoint-down(md){
+						padding-left: 0;
+						padding-right: 0;
+						padding-top: .9rem;
+						padding-bottom: .9rem;
+						color: rgba(255,255,255,.7);
+						&:hover{
+							color: $white;
+						}
+					}
+				}
+				&.active {
+					> a {
+						color: $primary;
+						@include media-breakpoint-down(md){
+							color: $white;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.navbar-brand {
+		color: $white;
+		z-index: 0;
+		span{
+			color: $primary;
+		}
+		&:hover, &:focus{
+			color: $white;
+		}
+		@include media-breakpoint-down(md){
+			color: $white;
+		}
+	}
+
+	.navbar-nav {
+		@include media-breakpoint-down(md){
+			padding-bottom: 10px;
+		}
+		> .nav-item {
+			> .nav-link {
+				font-size: 18px;
+				padding-top: 1.8rem;
+				padding-bottom: 1.8rem;
+				padding-left: 20px;
+				padding-right: 20px;
+				font-weight: 700;
+				color: $white;
+				&:hover {
+					color: $primary;
+				}
+				opacity: 1!important;
+				@include media-breakpoint-down(md){
+					padding-left: 0;
+					padding-right: 0;
+					padding-top: .9rem;
+					padding-bottom: .9rem;
+					color: rgba(255,255,255,.7);
+					&:hover{
+						color: $white;
+					}
+				}
+			}
+
+			.dropdown-menu{
+				border: none;
+				background: $white;
+				-webkit-box-shadow: 0px 10px 34px -20px rgba(0,0,0,0.41);
+				-moz-box-shadow: 0px 10px 34px -20px rgba(0,0,0,0.41);
+				box-shadow: 0px 10px 34px -20px rgba(0,0,0,0.41);
+				.dropdown-item{
+					font-size: 14px;
+					&:hover, &:focus{
+						background: transparent;
+						color: $black;
+					}
+				}
+			}
+
+			
+			&.ftco-seperator {
+				position: relative;
+				margin-left: 20px;
+				padding-left: 20px;
+				@include media-breakpoint-down(md) {
+					padding-left: 0;
+					margin-left: 0;
+				}
+				&:before {
+					position: absolute;
+					content: "";
+					top: 10px;
+					bottom: 10px;
+					left: 0;
+					width: 2px;
+					background: rgba($white, .05);
+					@include media-breakpoint-down(md) {
+						display: none;
+					}
+				}
+			}
+			&.cta {
+				> a {
+					color: $black;
+					@include media-breakpoint-down(sm){
+						padding-left: 15px;
+						padding-right: 15px;
+					}
+					@include media-breakpoint-down(md){
+						color: $white;
+						background: $primary;
+					}
+				}
+			}
+			&.active {
+				> a {
+					color: $primary;
+					@include media-breakpoint-down(md){
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+	
+	.navbar-toggler {
+		border: none;
+		color: rgba(255,255,255,.5)!important;
+		cursor: pointer;
+		padding-right: 0;
+		text-transform: uppercase;
+		font-size: 16px;
+		letter-spacing: .1em;
+		&:focus{
+			outline: none !important;
+		}
+	}
+	
+	&.scrolled  {
+		position: fixed;
+		right: 0;
+		left: 0;
+		top: 0;
+		margin-top: -130px;
+		background: $white!important;
+		box-shadow: 0 0 10px 0 rgba(0,0,0,.1);
+		.nav-item {
+			&.active {
+				> a {
+					color: $primary!important;
+				}
+			}
+			&.cta {
+				> a {
+					color: $white !important;
+					background: $primary;
+					border: none !important;
+					 
+					span {
+						display: inline-block;
+						color: $white !important;
+					}
+				}
+				&.cta-colored {
+					span {
+						border-color: $primary;
+					}
+				}
+			}
+		}
+
+		.navbar-nav {
+			@include media-breakpoint-down(md) {
+				background: none;
+				border-radius: 0px;
+				padding-left: 0rem!important;
+				padding-right: 0rem!important;
+			}
+		}
+
+		.navbar-nav {
+			@include media-breakpoint-down(sm) {
+				background: none;
+				padding-left: 0!important;
+				padding-right: 0!important;
+			}
+		}
+
+		.navbar-toggler {
+			border: none;
+			color: rgba(0,0,0,.5)!important;
+			border-color: rgba(0,0,0,.5)!important;
+			cursor: pointer;
+			padding-right: 0;
+			text-transform: uppercase;
+			font-size: 16px;
+			letter-spacing: .1em;
+
+		}
+		.nav-link {
+			padding-top: .9rem!important;
+			padding-bottom: .9rem!important;
+			color: $black!important;
+			&.active {
+				color: $primary!important;
+			}
+		}
+		&.awake {
+			margin-top: 0px;
+			transition: .3s all ease-out;
+		}
+		&.sleep {
+			transition: .3s all ease-out;	
+		}
+
+		.navbar-brand {
+			color: $black;
+		}
+	}
+}
+
+.navbar-brand {
+	font-weight: 900;
+	font-size: 24px;
+}
+
+
+.hero-wrap{
+	width: 100%;
+    min-height: 70vh; 
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-blend-mode: multiply;
+	@include media-breakpoint-down(lg){
+		background-position: top center !important;
+	}
+	.overlay{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		content: '';
+		opacity: 0;
+		background: $white;
+		min-height: 90vh;
+		@include media-breakpoint-down(lg){
+			opacity: 0;
+		}
+	}
+	&.hero-wrap-2{
+		height: 800px;
+		.overlay{
+			background: $black;
+			width: 100%;
+			opacity: .3;
+			height: 800px;
+		}
+		.slider-text{
+			height: 800px;
+		}
+	}
+}
+
+
+
+
+
+.slider-text{
+	position: relative;
+	height: 800px;
+	h1 {
+		font-size: 54px;
+		color: 'red';
+		line-height: 1.2;
+		font-weight: 900;
+		text-transform: uppercase;
+		letter-spacing: 5px;
+		@include media-breakpoint-down(md) {
+			font-size: 40px;
+		}
+	}
+	p {
+		font-size: 20px;
+		line-height: 1.5;
+		font-weight: 300;
+		color: rgba(255,255,255,.8);
+		strong{
+			font-weight: 700;
+			a{
+				color: $black;
+			}
+		}
+	}
+	.play-video{
+		position: relative;
+		@include media-breakpoint-up(md){
+			height: 800px;
+			p{
+				writing-mode: vertical-lr;
+			  transform: rotate(180deg);
+			  text-orientation: sideways;
+			  text-align:left;
+			  margin: 0rem;
+			  position: absolute;
+			  top: -10em;
+			  left: 0;
+			  height: 100%;
+			  z-index: 1;
+			  font-size: 16px;
+			  text-transform: uppercase;
+			  letter-spacing: 2px;
+			  a{
+			  	color: $white;
+			  }
+			  .icon{
+			  	font-size: 16px;
+			  	padding-bottom: 10px;
+			  	i{
+			  		padding: 20px 15px;
+			  		background: $black;
+			  		@include border-radius(3px);
+			  	}
+			  }
+			}
+		}
+	}
+	.breadcrumbs{
+		font-size: 16px;
+		margin-bottom: 20px;
+		z-index: 99;
+		font-weight: 400;
+		span{
+			color: rgba(255,255,255,.8);
+			i{
+				color: rgba(255,255,255,.8);
+			}
+			a{
+				color: rgba(255,255,255,1);
+				&:hover, &:focus{
+					color: $primary;
+					i{
+						color: $primary;
+					}
+				}
+			}
+		}
+	}
+	.bread{
+		font-weight: 900;
+		color: $white;
+		font-size: 60px;
+	}
+}
+
+
+// VOLUNTEER
+.ftco-volunteer{
+	.text{
+		h2{
+			font-weight: 900;
+			font-size: 50px;
+			line-height: 1.1;
+			color: $black;
+		}
+	}
+	.img-volunteer{
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: top center;
+		@include media-breakpoint-up(lg){
+			margin-top: -70px;
+		}
+	}
+	.about-text{
+        color: $white;
+       
+  
+
+
+		h2{
+			font-weight: 900;
+			font-size: 45px;
+			line-height: 1.1;
+			color: $white;
+			strong,span{
+				font-weight: 900;
+				color: rgba(255,255,255,.2);
+			}
+		}
+	}
+}
+
+//UPCOMING EVENTS
+.ftco-mission{
+    
+	h3{
+		font-weight: 900;
+	}
+}
+
+.container{
+	max-width: 1180px;
+}
+
+.bg-light {
+	background: #f8f9fa!important;
+}
+
+.bg-primary{
+	background: $primary;
+}
+
+.bg-black{
+	background: #1e1e1e;
+}
+
+
+//BUTTON
+.btn {
+	cursor: pointer;
+	@include border-radius(3px);
+	// box-shadow: none!important;
+	-webkit-box-shadow: 0px 24px 36px -11px rgba(0,0,0,0.09);
+	-moz-box-shadow: 0px 24px 36px -11px rgba(0,0,0,0.09);
+	box-shadow: 0px 24px 36px -11px rgba(0,0,0,0.09);
+	&:hover, &:active, &:focus {
+		outline: none;
+	}
+	&.btn-primary {
+		background: $primary !important;
+		border: 1px solid $primary !important;
+		color: $white !important;
+		&:hover {
+			border: 1px solid $primary;
+			background: transparent;
+			color :$primary;
+		}
+		&.btn-outline-primary {
+			border: 1px solid $primary;
+			background: transparent;
+			color :$primary;
+			&:hover {
+				border: 1px solid transparent;
+				background: $primary;
+				color :$white;
+			}
+		}
+	}
+	&.btn-black {
+		background: $black !important;
+		border: 1px solid $black !important;
+		color: $white !important;
+		&:hover {
+			border: 1px solid $black !important;
+			background: $black !important;
+			color :$white;
+		}
+		&.btn-outline-black {
+			border: 1px solid $black;
+			background: transparent;
+			color :$black;
+			&:hover {
+				border: 1px solid transparent;
+				background: $black !important;
+				color :$white;
+			}
+		}
+	}
+}
+
+
+
+
+.ftco-footer {
+	font-size: 16px;
+	background: #1e1e1e;
+	padding: 7em 0;
+	z-index: 0;
+	.ftco-footer-logo {
+		text-transform: uppercase;
+		letter-spacing: .1em;
+	}
+	.ftco-footer-widget {
+		h2 {
+			font-weight: normal;
+			color: $white;
+			margin-bottom: 40px;
+			font-size: 24px;
+			font-weight: 900;
+		}
+		ul{
+			li{
+				a{
+					color: rgba(255,255,255,.4);
+					span{
+						color: $white;
+					}
+				}
+			}
+		}
+		.btn-primary{
+			background: $white !important;
+			border: 2px solid $white !important;
+			&:hover{
+				background: $white;
+				border: 2px solid $white !important;
+			}
+		}
+	}
+	p {
+		color: rgba($white, .7);
+	}
+	a {
+		color: rgba($white, .7);
+		&:hover {
+			color: $white;
+		}
+	}
+	.ftco-heading-2 {
+		font-size: 17px;
+		font-weight: 400;
+		color: $black;
+	}
+}
+
+
+.ftco-footer-social {
+	li {
+		list-style: none;
+		margin: 0 10px 0 0;
+		display: inline-block;
+		a {
+			height: 50px;
+			width: 50px;
+			display: block;
+			float: left;
+			background: rgba($white, .05);
+			border-radius: 50%;
+			position: relative;
+			span {
+				position: absolute;
+				font-size: 26px;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+			}
+			&:hover {
+				color: $white;
+			}
+		}
+	}
+}
+.footer-small-nav {
+	> li {
+		display: inline-block;
+		a {
+			margin: 0 10px 10px 0;
+			&:hover, &:focus {
+				color: $primary;
+			}
+		}
+	}
+}
+.media {
+	.ftco-icon {
+		width: 100px;
+		span {
+			color: $primary;
+		}
+	}
+}
+.ftco-media {
+	background: $white;
+	border-radius: 0px;
+	.heading {
+		font-weight: normal;
+	}
+	&.ftco-media-shadow {
+		padding: 40px;
+		background: $white;
+		box-shadow: 0 10px 50px -15px rgba(0,0,0,.3);
+		transition: .2s all ease;
+		position: relative;
+		top: 0;
+		&:hover, &:focus {
+			top: -3px;
+			box-shadow: 0 10px 70px -15px rgba(0,0,0,.3);
+		}
+	}
+	.icon {
+		font-size: 50px;
+		display: block;
+		color: $primary;
+	}
+	&.text-center {
+		.ftco-icon {
+			margin: 0 auto;
+		}
+	}
+}
+.ftco-overflow-hidden {
+	overflow: hidden;
+}
+
+.padding-top-bottom {
+	padding-top: 120px;
+	padding-bottom: 120px;
+}
+
+// Map
+
+#map {
+	// height: 400px;
+	width: 100%;
+	@include media-breakpoint-down(md) {
+		height: 300px;
+	}
+}
+
+
+@-webkit-keyframes pulse {
+  0% {
+    -webkit-box-shadow: 0 0 0 0 rgba($primary, 0.4);
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 30px rgba($primary, 0);
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 rgba($primary, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 rgba($primary, 0.4);
+    box-shadow: 0 0 0 0 rgba($primary, 0.4);
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 30px rgba($primary, 0);
+      box-shadow: 0 0 0 30px rgba($primary, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba($primary, 0);
+      box-shadow: 0 0 0 0 rgba($primary, 0);
+  }
+}
+
+.heading-section{
+    font-weight: 500;
+	color: #999999;
+
+	.subheading{
+        font-size: 18px;
+        
+		display: block;
+		margin-bottom: 5px;
+	}
+	h2{
+		font-size: 50px;
+	
+		font-weight: 900;
+		line-height: 1.1;
+		span{
+			font-weight: 400;
+		}
+		@include media-breakpoint-down(sm){
+			font-size: 28px;
+		}
+	
+	}
+	h2:after {
+		border-bottom: 2px solid #9f4f5c;
+		width: 81px;
+		display: block;content: "";
+		margin: 8px auto 0;
+	}
+	
+	h5{
+		font-size: 20px;
+	
+		font-weight: 900;
+		line-height: 1.1;
+		span{
+			font-weight: 400;
+		}
+		@include media-breakpoint-down(sm){
+			font-size: 20px;
+		}
+	
+	}
+	h5:before {
+		border-left: 8px solid #9f4f5c;
+		width: 40px;
+padding-left: 5px;
+		content: "";
+		
+	}
+
+
+
+
+	&.heading-section-white{
+		.subheading{
+			color: rgba(255,255,255,.9);
+		}
+		h2{
+			font-size: 40px;
+			color: $white;
+		}
+		p{
+			color: rgba(255,255,255,.9);
+		}
+	}
+
+
+}
+
+//COVER BG
+.img,
+.blog-img,
+.user-img{
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+
+
+.about-image{
+	@include media-breakpoint-down(sm){
+		height: 400px;
+		margin-bottom: 30px;
+	}
+}
+
+
+//TESTIMONY
+.testimony-section{
+	position: relative;
+	background: #f7f7f9;
+	padding: 100px;
+	.testimony-img{
+		display: block;
+		width: 100%;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: top center;
+		@include media-breakpoint-up(lg){
+			margin-top: -150px;
+		}
+	}
+	.overlay{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		content: '';
+		opacity: .7;
+		background: $darken;
+		// @include gradient-background();
+	}
+	.owl-carousel{
+		margin: 0;
+	}
+	.owl-carousel .owl-stage-outer{
+		padding-top: 0;
+		padding-bottom: 0;
+		position: relative;
+	}
+	.owl-nav {
+		position: absolute;
+		bottom: 60px !important;
+		left: 0;
+		right: 0;
+		// max-width: 1200px;
+		margin: 0 auto;
+		@include media-breakpoint-down(md){
+			display: none;
+		}
+		.owl-prev,
+		.owl-next {
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			background: $white !important;
+			@include transition(.7s);
+			span {
+				&:before {
+					font-size: 20px;
+					margin-top: 7px;
+					color: $black;
+				}
+			}
+			opacity: 1;
+		}
+		.owl-prev {
+			top: 0 !important;
+			right: 0 !important;
+			@include media-breakpoint-up(lg){
+				right: 61px !important;
+			}
+			&:hover, &:focus{
+				background: $black !important;
+				outline: none !important;
+				span {
+					&:before {
+						font-size: 20px;
+						margin-top: 7px;
+						color: $white;
+					}
+				}
+			}
+		}
+		.owl-next {
+			top: 0 !important;
+			right: 0 !important;
+			@include media-breakpoint-up(lg){
+				right: 0 !important;
+			}
+			&:hover, &:focus{
+				background: $black !important;
+				outline: none !important;
+				span {
+					&:before {
+						font-size: 24px;
+						margin-top: 7px;
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+	.owl-dots {
+		// text-align: center;
+		.owl-dot {
+			width: 10px;
+			height: 10px;
+			margin: 5px;
+			border-radius: 50%;
+			background: rgba(255,255,255,.3);
+			&.active {
+				background: $white;
+			}
+		}
+	}
+}
+.testimony-wrap{
+	display: block;
+	position: relative;
+	color: rgba(255,255,255,.8);
+	font-size: 20px;
+	.user-img{
+		width: 80px;
+		height: 80px;
+		border-radius: (50%);
+		position: relative;
+		background-position: top center;
+		.quote{
+			position: absolute;
+			bottom: -10px;
+			right: 0;
+			width: 40px;
+			height: 40px;
+			background: $primary;
+			@include border-radius(50%);
+			i{
+				color: $white;
+			}
+		}
+	}
+	.text{
+		padding-top: 6em;
+		margin-top: -65px;
+		@include border-radius(4px);
+	}
+	p{
+		// font-size: 20px;
+	}
+	.name{
+		font-weight: 400;
+		margin-bottom: 0;
+		color: $white;
+		font-weight: 800;
+		font-size: 20px;
+	}
+	.position{
+		font-size: 18px;
+		color: rgba(255,255,255,.8);
+	}
+}
+
+.about-image{
+	@include media-breakpoint-down(sm){
+		height: 400px;
+		margin-bottom: 30px;
+	}
+}
+
+
+
+
+
+
+
+// magnific pop up
+
+#section-counter{
+	position: relative;
+	z-index: 0;
+	background-color: #6b76ff;
+	&:after{
+		position: absolute;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		content: '';
+		z-index: -1;
+		opacity: 0;
+		background: $black;
+	}
+}
+.ftco-counter {
+    // padding: 6em 0;
+
+	@include media-breakpoint-down(lg){
+        background-position: center center !important;
+        
+	}
+	.img{
+		display: block;
+        width: 100%;
+        height: 100%;
+		@include media-breakpoint-down(md){
+			height: 100%;
+			background-position: top center !important;
+		}
+	}
+	.block-18{
+	}
+	.heading-section{
+		h2{
+			span{
+				font-weight: 900;
+				color: rgba(0,0,0,.3);
+			}
+		}
+	}
+}
+
+.ftco-counter-2 {
+    // padding: 6em 0;
+background-color: #eaebf2;
+	@include media-breakpoint-down(lg){
+        background-position: center center !important;
+        
+	}
+	.img{
+		display: block;
+        width: 100%;
+        height: 100%;
+		@include media-breakpoint-down(md){
+			height: 600px;
+			background-position: top center !important;
+		}
+	}
+	.block-18{
+	}
+	.heading-section{
+		h2{
+			span{
+				font-weight: 900;
+				color: rgba(0,0,0,.3);
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+/// SLider
+
+.slider {
+	position: relative;
+	width: 100%;
+	height: 400px;
+	overflow: hidden;
+
+	& a {
+		&.previousButton, &.nextButton {
+			font-size: 22px;
+			line-height: 0;
+			display: block;
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			transition: all .3s linear;
+			z-index: 1;
+			color: #333;
+			padding: 10px;
+			text-decoration: none;
+			backface-visibility: hidden; /* prevent jump effect when scaling */
+
+			&:not(.disabled):hover {
+				transform: translateY(-50%) scale(1.25);
+				cursor: pointer;
+			}
+		}
+
+		&.previousButton {
+			left: 20px;
+		}
+
+		&.nextButton {
+			right: 20px;
+		}
+	}
+}
+
+.slide {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	overflow: hidden;
+
+	&.hidden {
+		visibility: hidden;
+	}
+
+	&.previous {
+		left: -100%;
+	}
+
+	&.current {
+		left: 0;
+	}
+
+	&.next {
+		left: 100%;
+	}
+
+	&.animateIn,
+	&.animateOut {
+		transition: all 2s ease;
+	}
+
+	&.animateIn {
+		&.previous,
+		&.next {
+			left: 0;
+			visibility: visible;
+		}
+	}
+
+	&.animateOut {
+		&.previous {
+			left: 100%;
+		}
+
+		&.next {
+			left: -100%;
+		}
+	}
+}
+
+
+
+
+
+
+//TEAM
+.team-section{
+	position: relative;
+	background: white;
+	padding: 100px;
+	.testimony-img{
+		display: block;
+		width: 100%;
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-position: top center;
+		@include media-breakpoint-up(lg){
+			margin-top: -150px;
+		}
+	}
+	.overlay{
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		content: '';
+		opacity: .7;
+		background: $darken;
+		// @include gradient-background();
+	}
+	.owl-carousel{
+		margin: 0;
+	}
+	.owl-carousel .owl-stage-outer{
+		padding-top: 0;
+		padding-bottom: 0;
+		position: relative;
+	}
+	.owl-nav {
+		position: absolute;
+		bottom: 60px !important;
+		left: 0;
+		right: 0;
+		// max-width: 1200px;
+		margin: 0 auto;
+		@include media-breakpoint-down(md){
+			display: none;
+		}
+		.owl-prev,
+		.owl-next {
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			background: $white !important;
+			@include transition(.7s);
+			span {
+				&:before {
+					font-size: 20px;
+					margin-top: 7px;
+					color: $black;
+				}
+			}
+			opacity: 1;
+		}
+		.owl-prev {
+			top: 0 !important;
+			right: 0 !important;
+			@include media-breakpoint-up(lg){
+				right: 61px !important;
+			}
+			&:hover, &:focus{
+				background: $black !important;
+				outline: none !important;
+				span {
+					&:before {
+						font-size: 20px;
+						margin-top: 7px;
+						color: $white;
+					}
+				}
+			}
+		}
+		.owl-next {
+			top: 0 !important;
+			right: 0 !important;
+			@include media-breakpoint-up(lg){
+				right: 0 !important;
+			}
+			&:hover, &:focus{
+				background: $black !important;
+				outline: none !important;
+				span {
+					&:before {
+						font-size: 24px;
+						margin-top: 7px;
+						color: $white;
+					}
+				}
+			}
+		}
+	}
+	.owl-dots {
+		// text-align: center;
+		.owl-dot {
+			width: 10px;
+			height: 10px;
+			margin: 5px;
+			border-radius: 50%;
+			background: rgba(255,255,255,.3);
+			&.active {
+				background: $white;
+			}
+		}
+	}
+}
+
+
+//PROJECT
+.project{
+	width: 100%;
+	margin-bottom: 60px;
+	.text{
+		position: relative;
+		width: 100%;
+	}
+	.img{
+		width: 100%;
+		height: 230px;
+	}
+	.cat{
+		color: $white;
+		font-size: 15px;
+		display: inline-block;
+		background: lighten($primary,10%);
+		border-radius: 30px;
+		padding: 0 10px;
+		margin-bottom: 10px;
+		margin-top: -38px;
+		position: absolute;
+		top: 0;
+		left: 50%;
+		transform: translateX(-50%);
+	}
+	h3{
+		font-size: 22px;
+		font-weight: 500;
+		a{
+			color: $black;
+		}
+	}
+}

@@ -1,21 +1,69 @@
 import React from "react"
-import Header from "../components/Header"
-import Footer from "../components/Footer"
-import SEO from "../components/SEO"
+import PropTypes from "prop-types"
 
-const PrimaryLayout = props => (
-  <div>
-    <SEO />
-    <Header />
-    <main>
-      <div className="container">
-        <div className="row justify-content-md-center">
-          <div className={props.column}>{props.children}</div>
-        </div>
+import "./layout.scss"
+
+const getScrollNode = (element) => {
+  return element.ownerDocument.scrollingElement || element.ownerDocument.documentElement
+}
+
+const isScrolled = (element) => {
+  const scrollNode = getScrollNode(element)
+  return scrollNode.scrollTop > 0
+}
+
+export default class Layout extends React.Component {
+  constructor(props) {
+    super(props)
+    this.siteContainer = React.createRef()
+    this.state = {
+      scrolled: false,
+    }
+    this.handleScroll = this.handleScroll.bind(this)
+  }
+
+  componentDidMount() {
+    window.addEventListener("scroll", this.handleScroll)
+    const element = this.siteContainer.current
+    this.setState({
+      scrolled: isScrolled(element),
+    })
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("scroll", this.handleScroll)
+  }
+
+  handleScroll() {
+    const element = this.siteContainer.current
+    this.setState({
+      scrolled: isScrolled(element),
+    })
+  }
+
+  render() {
+    let className = "site-container"
+    if (this.props.className) className += ` ${this.props.className}`
+    if (this.state.scrolled) className += " navbar-scrolled"
+
+    return (
+      <div
+        className={className}
+        ref={this.siteContainer}
+        id="page-top">
+
+        <main>{this.props.children}</main>
+        <footer className="bg-light py-5">
+          <div className="container">
+            <div className="small text-center text-muted">Copyright &copy; 2019 - Start Bootstrap1</div>
+          </div>
+        </footer>
       </div>
-    </main>
-    <Footer />
-  </div>
-)
+    )
+  }
+}
 
-export default PrimaryLayout
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string,
+}

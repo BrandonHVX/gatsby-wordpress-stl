@@ -26,14 +26,17 @@ module.exports = {
     {
       resolve: `gatsby-source-wordpress`,
       options: {
-        baseUrl: `codingsrc.com`,
+        baseUrl: `29p.0f3.myftpupload.com`,
         protocol: `https`,
         hostingWPCOM: false,
       },
     },
     `gatsby-plugin-react-helmet`,
+    `gatsby-transformer-sharp`,
     "gatsby-plugin-robots-txt",
     `gatsby-plugin-netlify`,
+    `gatsby-plugin-sharp`,
+    `gatsby-plugin-sass`,
     {
       resolve: "gatsby-plugin-netlify-cache",
       options: {
@@ -49,6 +52,12 @@ module.exports = {
         background_color: `#F8F9FA`,
         theme_color: `#FFFFFF`,
         display: `standalone`,
+      },
+    },
+    {
+      resolve: `gatsby-plugin-typography`,
+      options: {
+        pathToConfigModule: `src/utils/typography`,
       },
     },
     `gatsby-plugin-offline`
