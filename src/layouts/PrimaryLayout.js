@@ -1,5 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
+import Header from '../components/Header';
 
 import "./layout.scss"
 
@@ -51,7 +52,7 @@ export default class Layout extends React.Component {
         className={className}
         ref={this.siteContainer}
         id="page-top">
-
+        <Header />
         <main>{this.props.children}</main>
         <footer className="bg-light py-5">
           <div className="container">

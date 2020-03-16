@@ -4,19 +4,47 @@ import PrimaryLayout from "../layouts/PrimaryLayout"
 import Post from "../components/Post"
 import bg1 from "../images/stl-header-image.jpg";
 import curbservice from "../images/CURBSERVICE.jpg";
+import spotifylogo from "../images/spotify-logo.png";
 import testimage from "../images/testimony-img.png";
+import mdgdamob from "../images/mdgdamob.jpg";
+import whitbobby from "../images/whit-bobby.jpg";
+import spotifywhite from "../images/spotify-white.png";
+import spotifygreen from "../images/Spotify_Icon_RGB_Green.png";
+
+import stlprofile from "../images/LilStLouis-5330.jpg";
+import stlprofile1 from "../images/lilstlouis7434.jpg";
+import curbvideoimage from "../images/curbvideoimage.png";
+import curb from "../images/curb.jpg";
+import cameup from "../images/cameup.jpg";
 import edu from "../images/lilstlpic.png";
+import youtubelogo from "../images/yt_logo_rgb_dark.png";
 import testimony from "../images/testimony-img.png";
 import content from '../components/content';
+import Gallery from '../components/Gallery';
 import Slider from 'react-animated-slider';
 import SpotifyPlayer from 'react-spotify-player';
+import Youtube from '../components/Youtube';
+import Header from '../components/Header';
+import Came from '../components/Came';
+import HeaderImage from '../components/bgImage';
+import PlayWidget from 'react-spotify-widgets';
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faCoffee, faPlay, FaPlayCircle } from '@fortawesome/free-solid-svg-icons'
+import { Button } from 'react-bootstrap';
+import { fas } from '@fortawesome/free-solid-svg-icons'
+import FaPlayCircleO from 'react-icons/lib/fa/play-circle-o';
+import Img from "gatsby-image";
+import FaYoutubePlay from 'react-icons/lib/fa/youtube-play';
+
+
 
 const bgImage = {
   backgroundImage: `url(${bg1})`,
   // backgroundColor: '#000874',
   backgroundPosition: 'bottom',
   paddingBottom: '90px',
-  filter: 'grayscale(100%)',
+
 
 
 }
@@ -38,14 +66,15 @@ const testiImage = {
 
 const bgImage2 = {
   backgroundImage: `url(${bg1})`,
-  backgroundSize: '100%',
+  backgroundSize: '200%',
+  backgroundPosition: 'center',
 
   backgroundRepeat: 'no-repeat'
 }
 
 
 const spotifyImage = {
-  backgroundImage: `url(${curbservice})`,
+  backgroundImage: `url(${curbvideoimage})`,
   dataStellarBackgroundRatio: "0.5"
 }
 
@@ -65,46 +94,55 @@ const view = 'coverart'; // or 'coverart'
 const theme = 'white'; // or 'white'
 
 
+const profile = {
+  backgroundImage: `url(${stlprofile})`,
+  backgroundSize: '200%',
+  backgroundPosition: 'top center',
+
+
+};
+
+const profiletube = {
+  backgroundImage: `url(${stlprofile1})`,
+  backgroundSize: '120%',
+
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: ' center',
+
+};
+
+
+
+
 export default ({ data }) => {
   console.log(data)
   return (
     <PrimaryLayout column="col-xs-6"  >
+
       <div class="parallax">
       </div>
-      <div class="hero-wrap" style={bgImage} >
-        <div class="overlay"></div>
+      <div class="hero-wrap" style={bgImage}>
+
+        <div class="overlay" ></div>
         <div class="container">
-          <div class="row no-gutters slider-text align-items-center justify-content-end" data-scrollax-parent="true">
-            <div class="col-md-6 order-md-last  mt-5" data-scrollax=" properties: { translateY: '70%' }">
-              <h1 class="mb-4 hero-text" data-scrollax="properties: { translateY: '30%' }"> CURB SERVICE </h1>
-              <p><a href="#" class="btn btn-black py-3 px-4">WATCH NOW</a></p>
-            </div>
-            <div class="col-md-6 d-none d-md-block">
-              <div class="play-video pb-5 d-flex align-items-center">
-                <p><a href="https://vimeo.com/45830194" class="popup-vimeo"><span class="icon"><i class="ion-ios-play "></i></span> <span class="play">Play video</span></a></p>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
 
-      <div class="ftco-section ftco-no-pt ftco-no-pb ftco-volunteer">
+      <div class="ftco-section  ftco-volunteer">
         <div class="container">
           <div class="row">
             <div class="col img-volunteer" style={spotifyImage} >
-              <SpotifyPlayer
-                uri="spotify:album:4uiEuhrSjXoypRHIUqL2aU"
-                size={size}
-                view={view}
-                theme={theme}
-              />
+
+
 
             </div>
-            <div class="col-md-5 d-flex align-items-center bg-black">
-              <div class="about-text py-5 pl-md-5">
-                <h2> Upcoming Events</h2>
-                <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics</p>
-                <p><a href="#" class="btn btn-black py-3 px-4">Donate now</a></p>
+            <div class="col-md-5 d-flex align-items-center video-top">
+
+              <div class="about-text py-5 pl-md-1">
+                <h2 class="about-text"> CURB SERVICE</h2>
+                <p>MUSIC VIDEO</p>
+                <p><a class="btn icon-btn " href="#"><span class="glyphicon btn-glyphicon "><FaPlayCircleO /></span>Watch Now</a></p>
               </div>
             </div>
           </div>
@@ -113,81 +151,237 @@ export default ({ data }) => {
 
 
       <div class="ftco-section ftco-no-pt ftco-no-pb ftco-volunteer">
-        <div class="container">
-          <Slider autoplay={3000}>
-            {content.map((item, index) => (
-              <div
-                key={index}
-                style={{ background: `url('${item.image}') no-repeat center center` }}
-              >
-                <div className="center">
-                  <h1>{item.title}</h1>
-                  <p>{item.description}</p>
-                  <button>{item.button}</button>
+        <div class="">
+          <div class="">
+
+            <div class="">
+              <div class="artist__header">
+
+                <div class="artist__info">
+
+                  <div class="profile__img" style={profile} >
+
+
+
+                  </div>
+
+                  <div class="artist__info__meta">
+
+                    <div class="artist__info__type">Artist</div>
+
+                    <div class="artist__info__name">LIL STL</div>
+
+                    <div class="artist__info__actions">
+
+                      <p><a class="btn icon-btn-spotify " href="https://open.spotify.com/artist/4QxkxOOCdlAeNKKjBzW3uB" ><span class="glyphicon btn-glyphicon-spotify "><img src={spotifywhite} width={20} /></span>Follow</a></p>
+
+
+
+
+
+                    </div>
+
+                  </div>
+
+
+                </div>
+
+                <div class="artist__listeners">
+
+                  <img src={spotifylogo} alt="" />
+
+                </div>
+
+                <div class="artist__navigation">
+
+
+
                 </div>
               </div>
-            ))}
-          </Slider>
+
+            </div>
+          </div>
+
         </div>
       </div>
 
-
-      <section class="ftco-counter img ftco-section ftco-no-pt ftco-no-pb" id="about">
-        <div class="container">
-          <div class="row d-flex">
-            <div class="col-md-6 col-lg-5 d-flex ">
-              <div class="img d-flex align-self-stretch align-items-center" style={eduImage}>
+      <div >
+        <section class="ftco-counter img ftco-section ftco-no-pt ftco-no-pb" id="about">
+          <div class="container">
+            <div class="row d-flex justify-content-center">
+              <div class="col-md-6 col-lg-5 d-flex ">
+                <div class="img d-flex align-self-stretch align-items-center" style={eduImage}>
+                </div>
               </div>
-            </div>
-            <div class="col-md-6 col-lg-7 pl-lg-5 py-5">
-              <div class="py-md-5">
+              <div class="col-md-6 col-lg-7 pl-lg-5 py-5">
 
-                <div class="row no-gutters justify-content-center mb-5">
-                  <div class="col-md-8 text-center heading-section ftco-animate">
-                    <span class="subheading">About Us</span>
-                    <h2 class="mb-4">What is 1st Take?</h2>
-                    <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia.
-      It is a paradisematic country</p>
-                    <p></p>
+
+
+
+
+                <div class="row justify-content-center ">
+                  <div class="col-sm">
+
+                    <div class="trailer-wrapper mobile">
+
+                      <div class="tr-coming-soon">
+
+                        <div class="music-cards">
+                          <img src={curb} alt="" />
+                          <div >
+                            <Came />
+                          </div>
+
+                        </div>
+                      </div>
+                    </div>
                   </div>
+                  <div class="col-sm"> <div class="trailer-wrapper mobile">
+
+                    <div class="tr-coming-soon">
+
+                      <div class="music-cards">
+                        <img src={cameup} alt="" />
+                        <div class="play-btn color6">
+                          <img src={spotifygreen} alt="" />
+                        </div>
+
+                      </div>
+                    </div>
+                  </div></div>
+                  <div class="col-sm">
+                    <div class="trailer-wrapper mobile">
+
+                      <div class="tr-coming-soon">
+
+                        <div class="music-cards">
+                          <img src={whitbobby} alt="" />
+                          <div class="play-btn color6">
+                            <img src={spotifygreen} alt="" />
+                          </div>
+
+                        </div>
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="col-sm">
+                    <div class="trailer-wrapper mobile">
+
+                      <div class="tr-coming-soon">
+
+                        <div class="music-cards">
+                          <img src={mdgdamob} alt="" />
+                          <div class="play-btn color6">
+                            <img src={spotifygreen} alt="" />
+
+                          </div>
+
+                        </div>
+
+
+
+                      </div>
+                    </div>
+
+                  </div>
+
+
+
+
+
                 </div>
 
 
-
-
-
-
-                <div class="row justify-content-start ">
-
-                  <div class="col-md-12 heading-section ">
-                    <span class="subheading"></span>
-                    <h5 class="mb-3">MISSION</h5>
-                    <p>Our mission is to enrich the young minds of our community by providing them with hands-on training that centers around the complete process of filmmaking. 1st Take Youth Film Program introduces youth to socially responsible filmmaking while empowering them to tell the stories of their community. Our educational outreach program caters to students ages 12-18 and has become an outlet for opportunity youth to express their creativity and exercise new skills that can be utilized in everyday life.</p>
-                  </div>
-                </div>
               </div>
-              <div class="py-md-5">
-                <div class="row justify-content-start pb-5">
-                  <div class="col-md-12 heading-section mt-3">
-                    <span class="subheading"></span>
-                    <h5 class="mb-4">PURPOSE</h5>
-                    <p>To inspire our youth to strive for greatness by using the fundamentals of the filmmaking process to turn their visions into reality.students ages 12-18 and has become an outlet for opportunity youth to express their creativity and exercise new skills that can be utilized in everyday life.</p>
-                  </div>
-                </div>
-              </div>
+
             </div>
           </div>
           <div>
+
           </div>
+        </section>
+      </div>
+
+
+
+
+      <div class="ftco-section-youtube ftco-no-pt ftco-no-pb ftco-volunteer">
+        <div class="">
+
+          <div class="artist__header">
+
+            <div class="artist__info">
+
+              <div class="profile__img" style={profiletube}>
+
+
+
+              </div>
+
+              <div class="artist__info__meta">
+
+                <div class="artist__info__type">Artist</div>
+
+                <div class="artist__info__name">LILSTLVEVO</div>
+
+                <div class="artist__info__actions">
+
+                  <p><a class="btn icon-btn-youtube " href="https://www.youtube.com/channel/UClKdrIM2kd7p69vFY6NSynA/?sub_confirmation=1" ><span class="glyphicon btn-glyphicon-youtube "><FaYoutubePlay /></span>Subscribe</a></p>
+
+
+                </div>
+              </div>
+            </div>
+
+            <div class="artist__listeners">
+
+              <img class="mt-2" src={youtubelogo} alt="" />
+
+            </div>
+
+            <div class="artist__navigation">
+
+
+
+            </div>
+          </div>
+
+          <section class="ftco-counter2 img ftco-section ftco-no-pt ftco-no-pb" id="about">
+
+            <div>
+              <Youtube />
+
+
+
+            </div>
+
+          </section>
+          <section class=" ftco-section ftco-no-pt ftco-no-pb bg-black" id="about">
+
+            <div>
+
+
+              <Gallery />
+
+            </div>
+
+          </section>
+
         </div>
-      </section>
+
+      </div>
 
 
-      <section class="testimony-section" style={test} id="services">
-        <div class="container">
 
-        </div>
-      </section>
+
+
+
+
+
 
       {/* <section class="testimony-section">
   <div class="container">
@@ -204,110 +398,7 @@ export default ({ data }) => {
   </div>
 </section> */}
 
-      <section class="team-section" id="team">
-        <div >
 
-          <div class="container">
-            <div class="row no-gutters justify-content-center mb-5">
-              <div class="col-md-6 text-center heading-section ftco-animate">
-                <span class="subheading">Team</span>
-                <h2 class="mb-4">Meet The Team</h2>
-                <p>Separated they live in. A small river named Duden flows by their place and supplies it with the necessary regelialia.
-      It is a paradisematic country</p>
-                <p></p>
-              </div>
-            </div>
-
-            <div class="row">
-
-              <div class="col-lg-3 col-md-6">
-                <div class="member text-center">
-                  <div class="img">
-                    <img src="https://i.postimg.cc/YC3kJnKb/team-1.jpg" class="img-fluid" alt="" />
-                  </div>
-                  <div class="m_text">
-                    <h3>Nabed Khan</h3>
-                    <h5>Front-End Developer</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident dolores.</p>
-                  </div>
-                  <div class="m_menu">
-                    <ul class="list-inline">
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <div class="member text-center">
-                  <div class="img">
-                    <img src="https://i.postimg.cc/YC3kJnKb/team-1.jpg" class="img-fluid" alt="" />
-                  </div>
-                  <div class="m_text">
-                    <h3>Emilia Noah</h3>
-                    <h5>Creative Designer</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident dolores.</p>
-                  </div>
-                  <div class="m_menu">
-                    <ul class="list-inline">
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <div class="member text-center">
-                  <div class="img">
-                    <img src="https://i.postimg.cc/CLbw4Mvy/team-2.jpg" class="img-fluid" alt="" />
-                  </div>
-                  <div class="m_text">
-                    <h3>Emilia Noah</h3>
-                    <h5>Digital Marketer</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident dolores.</p>
-                  </div>
-                  <div class="m_menu">
-                    <ul class="list-inline">
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-lg-3 col-md-6">
-                <div class="member text-center">
-                  <div class="img">
-                    <img src="https://i.postimg.cc/jSKt3V9D/team-3.jpg" class="img-fluid" alt="" />
-                  </div>
-                  <div class="m_text">
-                    <h3>Emilia Noah</h3>
-                    <h5>Back-End Developer</h5>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio provident dolores.</p>
-                  </div>
-                  <div class="m_menu">
-                    <ul class="list-inline">
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-instagram"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-twitter"></i></a></li>
-                      <li class="list-inline-item"><a href="#"><i class="fab fa-linkedin-in"></i></a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
 
 
@@ -318,6 +409,7 @@ export default ({ data }) => {
             <div class="col-md">
               <div class="ftco-footer-widget mb-4">
                 <h2 class="ftco-heading-2">Aid.</h2>
+
                 <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts.</p>
                 <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                   <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
@@ -374,15 +466,15 @@ export default ({ data }) => {
 
 
 
-    </PrimaryLayout>
+    </PrimaryLayout >
   )
 }
 
 export const query = graphql`
   {
-  allWordpressPost{
-    nodes {
-      slug
+        allWordpressPost{
+      nodes {
+        slug
       title
       excerpt
       featured_media {

@@ -165,7 +165,7 @@ $white: #fff;
 $black: #000000;
 $darken: #232931;
 
-$primary: #ffb400;
+$primary: #f50202;
 $secondary: #6b76ff;
 
 
@@ -478,9 +478,13 @@ a {
 }
 
 
+
+
+
 .hero-wrap{
 	width: 100%;
-    min-height: 70vh; 
+	min-height: 90vh; 
+	filter: grayscale(100%);
 
     /* Create the parallax scrolling effect */
     background-attachment: fixed;
@@ -637,9 +641,12 @@ a {
 
 		h2{
 			font-weight: 900;
-			font-size: 45px;
+			border-radius: 50px;
+
+			
+			font-size: 50px;
 			line-height: 1.1;
-			color: $white;
+			color: white;
 			strong,span{
 				font-weight: 900;
 				color: rgba(255,255,255,.2);
@@ -995,7 +1002,7 @@ padding-left: 5px;
 .testimony-section{
 	position: relative;
 	background: #f7f7f9;
-	padding: 100px;
+
 	.testimony-img{
 		display: block;
 		width: 100%;
@@ -1179,6 +1186,53 @@ padding-left: 5px;
 	}
 }
 .ftco-counter {
+	
+	background-color: #0909099c;	
+	border-bottom: 1px solid ;
+	position: relative;
+	// background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/spotify_img_bground.png);
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+    // padding: 6em 0;
+
+	@include media-breakpoint-down(lg){
+        background-position: center center !important;
+        
+	}
+	.img{
+		display: block;
+        width: 100%;
+        height: 100%;
+		@include media-breakpoint-down(md){
+			height: 100%;
+			background-position: top center !important;
+		}
+	}
+	.block-18{
+	}
+	.heading-section{
+		h2{
+			span{
+				font-weight: 900;
+				color: rgba(0,0,0,.3);
+			}
+		}
+	}
+}
+
+.ftco-counter2 {
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	background-color: #0909099c;	
+
+	position: relative;
+	background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/7022/spotify_img_bground.png);
+	background-size: cover;
+	overflow: auto;
+	background-position: center;
+	background-repeat: no-repeat;
     // padding: 6em 0;
 
 	@include media-breakpoint-down(lg){

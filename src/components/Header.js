@@ -1,24 +1,53 @@
 import React from "react"
+import Scrollspy from "react-scrollspy"
 import { Navbar, Nav } from "react-bootstrap"
-import { Link } from "gatsby"
-export default props => (
-  <header>
-    <Navbar bg="light" expand="lg">
-      <Navbar.Brand href="/">Gatsby-Bootstrap</Navbar.Brand>
-      <Navbar.Toggle aria-controls="basic-navbar-nav" />
-      <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <Nav.Link as={Link} to="/">
-            <b class="text-dark">Home</b>
-          </Nav.Link>
-          <Nav.Link as={Link} to="/about">
-          <b class="text-dark">About Us</b>
-          </Nav.Link>
-          <Nav.Link as={Link} to="/contact">
-          <b class="text-dark">Contact Us</b>
-          </Nav.Link>
-        </Nav>
-      </Navbar.Collapse>
-    </Navbar>
-  </header>
-)
+import Scroller from './scroller'
+import stllogo from "../images/lilstlnewlogo.png";
+export default class Header extends React.Component {
+  constructor(props) {
+    super(props);
+    Scroller.handleAnchorScroll = Scroller.handleAnchorScroll.bind(this);
+  }
+
+  render() {
+    return (
+      <>
+        <Navbar className="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav" expand="lg"
+          collapseOnSelect={true}>
+          <div className="container">
+            <a className="navbar-brand js-scroll-trigger" href="#page-top" onClick={Scroller.handleAnchorScroll}><img src={stllogo} width={300} alt="" /></a>
+            <Navbar.Toggle aria-controls="navbarResponsive" />
+            <Navbar.Collapse id="navbarResponsive">
+              <Nav className="navbar-nav ml-auto my-2 my-lg-0">
+                <Scrollspy className="navbar-nav"
+                  items={["about", "services", "team", "portfolio", "contact"]}
+                  currentClassName="active" rootEl={"#mainNav"} offset={-75}>
+                  <li className="nav-item">
+                    <Nav.Link className={"js-scroll-trigger"} href="#about" onClick={Scroller.handleAnchorScroll}>About Us</Nav.Link>
+                  </li>
+
+                </Scrollspy>
+              </Nav>
+            </Navbar.Collapse>
+          </div>
+        </Navbar>
+        {/* <header className="masthead">
+          <div className="container h-100">
+            <div className="row h-100 align-items-center justify-content-center text-center">
+              <div className="col-lg-10 align-self-end">
+                <h1 className="text-uppercase text-white font-weight-bold">Your Favorite Source of Free Bootstrap
+                  Themes</h1>
+                <hr className="divider my-4" />
+              </div>
+              <div className="col-lg-8 align-self-baseline">
+                <p className="text-white-75 font-weight-light mb-5">Start Bootstrap can help you build better websites
+                  using the Bootstrap framework! Just download a theme and start customizing, no strings attached!</p>
+                <a className="btn btn-primary btn-xl js-scroll-trigger" href="#about" onClick={Scroller.handleAnchorScroll}>Find Out More</a>
+              </div>
+            </div>
+          </div>
+        </header> */}
+      </>
+    );
+  }
+}
