@@ -487,13 +487,14 @@ a {
 	filter: grayscale(100%);
 
     /* Create the parallax scrolling effect */
-    background-attachment: fixed;
+
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
     background-blend-mode: multiply;
-	@include media-breakpoint-down(lg){
+	@include media-breakpoint-up(lg){
 		background-position: top center !important;
+	    background-attachment: fixed;
 	}
 	.overlay{
 		position: absolute;
@@ -524,28 +525,7 @@ a {
 }
 
 
-@media (max-width: 768px) {
-  
- 
-.hero-wrap{
-	width: 100%;
-	min-height: 90vh; 
-	filter: grayscale(100%);
 
-    /* Create the parallax scrolling effect */
-    
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-blend-mode: multiply;
-	@include media-breakpoint-down(lg){
-		background-position: top center !important;
-	}
-	
-
-}
-    
-  }
 
 
 
