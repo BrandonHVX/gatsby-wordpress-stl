@@ -30,7 +30,7 @@
     "gatsby-plugin-sharp": "^2.4.7",
     "gatsby-plugin-typography": "^2.3.23",
     "gatsby-source-filesystem": "^2.0.37",
-    "gatsby-source-wordpress": "^3.0.64",
+    "gatsby-source-wordpress": "^4.0.8",
     "gatsby-transformer-remark": "^2.3.12",
     "gatsby-transformer-sharp": "^2.3.17",
     "innertext": "^1.0.3",
